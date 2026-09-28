@@ -1,0 +1,37 @@
+meta {
+  name: Borrow Book
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{borrowUrl}}/borrows
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "bookId": {{bookId}},
+    "userId": {{userId}}
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setVar("borrowId", body.id);
+}
+
+tests {
+  test("Выдача создана", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(201);
+    expect(body.status).to.equal("BORROWED");
+    expect(String(body.bookId)).to.equal(String(bru.getVar("bookId")));
+    expect(String(body.userId)).to.equal(String(bru.getVar("userId")));
+  });
+}

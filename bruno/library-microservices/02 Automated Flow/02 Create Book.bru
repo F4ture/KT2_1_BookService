@@ -1,0 +1,40 @@
+meta {
+  name: Create Book
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{bookUrl}}/books
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "Integration Test {{runId}}",
+    "author": "Bruno CLI",
+    "available": true
+  }
+}
+
+script:pre-request {
+  bru.setVar("runId", Date.now().toString());
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setVar("bookId", body.id);
+}
+
+tests {
+  test("Книга создана и доступна", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().id).to.be.a("number");
+    expect(res.getBody().available).to.equal(true);
+  });
+}

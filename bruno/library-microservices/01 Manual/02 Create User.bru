@@ -1,0 +1,38 @@
+meta {
+  name: Create User
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{userUrl}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Bruno Tester",
+    "email": "bruno.tester.{{manualRunId}}@example.com"
+  }
+}
+
+script:pre-request {
+  bru.setVar("manualRunId", Date.now().toString());
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setVar("userId", body.id);
+}
+
+tests {
+  test("Пользователь создан", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+  });
+}

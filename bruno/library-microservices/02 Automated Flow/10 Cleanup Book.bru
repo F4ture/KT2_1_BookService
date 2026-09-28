@@ -1,0 +1,17 @@
+meta {
+  name: Cleanup Book
+  type: http
+  seq: 10
+}
+
+delete {
+  url: {{bookUrl}}/books/{{bookId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Тестовая книга удалена", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

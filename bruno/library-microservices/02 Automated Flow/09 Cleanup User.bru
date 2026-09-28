@@ -1,0 +1,17 @@
+meta {
+  name: Cleanup User
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{userUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Тестовый пользователь удалён", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

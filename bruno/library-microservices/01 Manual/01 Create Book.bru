@@ -1,0 +1,36 @@
+meta {
+  name: Create Book
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{bookUrl}}/books
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "Clean Architecture",
+    "author": "Robert C. Martin",
+    "available": true
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setVar("bookId", body.id);
+}
+
+tests {
+  test("Книга создана", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+    expect(res.getBody().available).to.equal(true);
+  });
+}

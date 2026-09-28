@@ -1,0 +1,18 @@
+meta {
+  name: Get Book
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{bookUrl}}/books/{{bookId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Книга найдена", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(String(res.getBody().id)).to.equal(String(bru.getVar("bookId")));
+  });
+}

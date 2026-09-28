@@ -1,0 +1,18 @@
+meta {
+  name: Return Book
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{borrowUrl}}/borrows/{{borrowId}}/return
+  body: none
+  auth: none
+}
+
+tests {
+  test("Книга возвращена", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("RETURNED");
+  });
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Eureka Registry
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{eurekaUrl}}/eureka/apps
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+tests {
+  test("Eureka отвечает", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Все сервисы зарегистрированы", function () {
+    const applications = res.getBody().applications.application;
+    const names = applications.map((item) => item.name);
+    expect(names).to.include("BOOK-SERVICE");
+    expect(names).to.include("USER-SERVICE");
+    expect(names).to.include("BORROW-SERVICE");
+  });
+}
